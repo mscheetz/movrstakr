@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>{{data.donateType}}</h1>
+<div mat-dialog-content>
+<div class="align-center">
+    <qr-code
+        [value]="data.address"
+        [size]="200"
+        (click)="copyAddress()"></qr-code><br>
+    <span class="text-muted text-small">Click QR Code to copy address.</span>
+</div>

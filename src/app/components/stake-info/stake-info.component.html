@@ -1,0 +1,125 @@
+<div>
+    <mat-card [style]="{ 'margin-top': '5px'}">
+        <div>
+            Address: <strong>{{stakingData.address}}</strong>
+        </div>
+        <div>
+            Current $MOVR Price: <strong>{{stakingData.price | currency}} (USD)</strong>
+        </div>
+        <div>
+            Staked $MOVR: <strong>{{stakingData.totalStaked}} ({{ stakingData.price * stakingData.totalStaked | currency }})</strong>
+        </div>
+        <div>
+            $MOVR Total Rewards: <strong>{{stakingData.totalReward}}</strong>
+        </div>
+        <div>
+            Total Staking Time: <strong>{{stakingData.stakingTotalTime}}</strong>
+        </div>
+        <div>
+            Total Staking Hours: <strong>{{stakingData.stakingHours}}</strong>
+        </div>
+    </mat-card>
+    <h4>Projections (Based on avg rewards/day)</h4>
+    <table mat-table [dataSource]="stakingData.potentialIntervals" class="mat-elevation-z8">
+        <ng-container matColumnDef="period">
+            <th mat-header-cell *matHeaderCellDef>Period</th>
+            <td mat-cell *matCellDef="let int">
+                <ng-container *ngIf="int < 365">{{ int }}
+                    <span *ngIf="int === 1">Day</span>
+                    <span *ngIf="int > 1 && int < 365">Days</span>
+                </ng-container>
+                <ng-container *ngIf="int >= 365">{{ int / 365 }} 
+                    <span *ngIf="int === 365">Year</span>
+                    <span *ngIf="int > 365">Years</span>
+                </ng-container>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="reward">
+            <th mat-header-cell *matHeaderCellDef>Reward</th>
+            <td mat-cell *matCellDef="let int">{{ int * stakingData.futureRewards[1].movr | number : '1.10-10' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="percent">
+            <th mat-header-cell *matHeaderCellDef>>% of Initial</th>
+            <td mat-cell *matCellDef="let int">{{ ((int * stakingData.futureRewards[1].movr) / stakingData.totalStaked) | percent : '1.2-2' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="current">
+            <th mat-header-cell *matHeaderCellDef>Current Value (USD)</th>
+            <td mat-cell *matCellDef="let int">{{ (int * stakingData.futureRewards[1].movr) * stakingData.price | currency }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="500">
+            <th mat-header-cell *matHeaderCellDef>Value $500/MOVR</th>
+            <td mat-cell *matCellDef="let int">{{ (int * stakingData.futureRewards[1].movr) * 500 | currency }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="900">
+            <th mat-header-cell *matHeaderCellDef>Value $900</th>
+            <td mat-cell *matCellDef="let int">{{ (int * stakingData.futureRewards[1].movr) * 900 | currency }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="1000">
+            <th mat-header-cell *matHeaderCellDef>Value $1000</th>
+            <td mat-cell *matCellDef="let int">{{ (int * stakingData.futureRewards[1].movr) * 1000 | currency }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="2000">
+            <th mat-header-cell *matHeaderCellDef>Value $2000</th>
+            <td mat-cell *matCellDef="let int">{{ (int * stakingData.futureRewards[1].movr) * 2000 | currency }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="5000">
+            <th mat-header-cell *matHeaderCellDef>Value $5000</th>
+            <td mat-cell *matCellDef="let int">{{ (int * stakingData.futureRewards[1].movr) * 5000 | currency }}</td>
+        </ng-container>
+        
+        <tr mat-header-row *matHeaderRowDef="projectionColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: projectionColumns;"></tr>
+    </table>
+    <h4>Averages</h4>
+    <table mat-table [dataSource]="stakingData.futureRewards" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="label">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let fut">{{fut.label}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="movr">
+            <th mat-header-cell *matHeaderCellDef>$MOVR</th>
+            <td mat-cell *matCellDef="let fut">{{fut.movr | number : '1.10-10' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="usd">
+            <th mat-header-cell *matHeaderCellDef>$ USD</th>
+            <td mat-cell *matCellDef="let fut">${{fut.usd | number : '1.10-10' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="hrs">
+            <th mat-header-cell *matHeaderCellDef>Hours (Til 1 MOVR)</th>
+            <td mat-cell *matCellDef="let fut">{{fut.hrsTil1Movr | number : '1.2-2' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="days">
+            <th mat-header-cell *matHeaderCellDef>Days (Til 1 MOVR)</th>
+            <td mat-cell *matCellDef="let fut">{{fut.daysTil1Movr | number : '1.2-2' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="hrsNext">
+            <th mat-header-cell *matHeaderCellDef>Hours (Til Next MOVR)</th>
+            <td mat-cell *matCellDef="let fut">{{fut.hrsTilNextMovr | number : '1.2-2' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="daysNext">
+            <th mat-header-cell *matHeaderCellDef>Days (Til Next MOVR)</th>
+            <td mat-cell *matCellDef="let fut">{{fut.daysTilNextMovr | number : '1.2-2' }}</td>
+        </ng-container>
+        
+        <tr mat-header-row *matHeaderRowDef="avgColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: avgColumns;"></tr>
+    </table>
+    <div>
+        <app-rewards [rewards]="stakingData.rewards"></app-rewards>
+    </div>
+</div>
