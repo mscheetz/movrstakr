@@ -1,6 +1,6 @@
 <span class="foot-pad">
     <a href="https://github.com/mscheetz/movrstakr" target="_blank">
-        <i class="fab fa-github white-text" c></i>
+        <i class="pi pi-github white-text" c></i>
     </a>
 </span>
 <span class="foot-pad"> | </span>
@@ -10,3 +10,20 @@ Donate:
 <span class="symbol foot-pad" (click)="getAddress('erc20')">ERC20</span>
 <span class="symbol foot-pad" (click)="getAddress('xhv')">XHV</span>
 <span class="symbol foot-pad" (click)="getAddress('xmr')">XMR</span>
+   
+<p-dialog 
+    header="{{donateType}}"
+    [responsive]="true"
+    [(visible)]="showQRCode"
+    [modal]="true"
+    [draggable]="false"
+    [baseZIndex]="10000">
+    <div class="align-center">
+        <qr-code
+         [value]="address"
+         [size]="200"
+         (click)="copyAddress()"></qr-code><br>
+        <span class="text-muted text-small">Click QR Code to copy address.</span>
+    </div>
+</p-dialog>
+<p-toast></p-toast>

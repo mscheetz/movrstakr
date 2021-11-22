@@ -1,22 +1,19 @@
-<mat-card>
+<div style="padding: 15px;">
     <h1 style="color: #000;">Welcome to MOVR Stakr!</h1>
     <h4 style="color: #000;">Get stats on your staked MOVR</h4>
 
-        <mat-card>
-            <mat-card-content>
-                    <mat-grid-list cols="2" rowHeight="100px" style="width: 700px;">
-                        <mat-grid-tile>
-                            <mat-form-field style="width: 450px;">
-                                <mat-label>Enter your MOVR wallet address:</mat-label>
-                                <input type="text" matInput [(ngModel)]="address" name="address" minlength="42" style="width:400px;" placeholder="0x..." />
-                            </mat-form-field> 
-                        </mat-grid-tile>
-                        <mat-grid-tile>
-                            <button *ngIf="!fetchingData" type="button" mat-button color="primary" (click)="getInfo()" style="margin-left: 5px;">Get Stats</button>
-                            <i *ngIf="fetchingData" class="fa fa-spinner fa-spin fa-3x fa-fw" style="font-size: 1.4rem; margin-left: 5px; color: #883cae;"></i>
-                        </mat-grid-tile>
-                    </mat-grid-list>
-            </mat-card-content>
-        </mat-card>
-        <app-stake-info *ngIf="stakingData.address !== ''" [stakingData]="stakingData"></app-stake-info>
-</mat-card>
+    <div class="p-d-flex p-flex-column p-flex-md-row">
+        <br>
+        <div class="p-mb-2 p-mr-2">
+            <div>
+                <span>Enter your MOVR wallet address:</span>
+                <input type="text" pInputText [(ngModel)]="address" name="address" minlength="42" placeholder="0x..." />
+            </div>
+        </div> 
+        <div class="p-mb-2 p-mr-2">
+            <button *ngIf="!fetchingData" type="button" pButton color="primary" (click)="getInfo()" style="margin-left: 5px;">Get Stats</button>
+            <i *ngIf="fetchingData" class="pi pi-spinner pi-spin" style="font-size: 1.4rem; margin-left: 5px; color: #883cae;"></i>
+        </div>
+    </div>        
+    <app-stake-info *ngIf="stakingData.address !== ''" [stakingData]="stakingData"></app-stake-info>
+</div>

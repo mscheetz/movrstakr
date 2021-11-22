@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MessageService } from 'primeng/api';
 import { Addresses } from 'src/app/classes/addresses.class';
 import { QrDialogData } from 'src/app/classes/qr-dialog-data.class';
 import { RestService } from 'src/app/core/rest.service';
@@ -19,7 +20,7 @@ export class FooterComponent implements OnInit {
   address!: string;
   symbol!: string;
 
-  constructor(private restSvc: RestService, private dialog: MatDialog) { 
+  constructor(private restSvc: RestService, private messageSvc: MessageService) { 
     this.getAllAddresses();
   }
 
@@ -63,18 +64,24 @@ export class FooterComponent implements OnInit {
       this.address = this.addresses.xmr;
     }
     this.showQRCode = true;
-    this.qrDialogData = {
-      address: this.address,
-      donateType: `Donate with ${coinName} (${this.symbol})`,
-      symbol: this.symbol
-    }
-    this.openDialog();
+    this.donateType = `Donate with ${coinName}`;
   }
 
-  openDialog() {
-    const ref = this.dialog.open(QrDialogComponent, {
-      data: this.qrDialogData
+  /**
+   * Copy address to the clipboard
+   */
+  copyAddress() {
+    document.addEventListener('copy', (e: ClipboardEvent) => {
+        e.clipboardData!.setData('text/plain', (this.address));
+        e.preventDefault();
+        document.removeEventListener('copy', null!);
     });
+    document.execCommand('copy');
 
+    let message = this.symbol + " address copied to clipboard";
+    this.messageSvc.clear();
+    this.messageSvc.add({ severity: 'success', detail: message });
+
+    this.showQRCode = false;
   }
 }
