@@ -138,6 +138,7 @@ getRewards = async(address) => {
     let rows = 100;
 
     while (moreRewards) {
+
         const response = await subscanSvc.getRewards(address, page, rows);
 
         if(response !== null && response.message.toLowerCase() === "success" && response.data.count > 0) {
@@ -157,6 +158,9 @@ getRewards = async(address) => {
 
             rewards.push.apply(rewards, rewardSubset);
 
+            if(page > 0 && (page % 4 === 0)) {
+                await goToSleep(1000);
+            }
             page++;
         } else {
             moreRewards = false;
@@ -164,6 +168,10 @@ getRewards = async(address) => {
     }
 
     return rewards;
+}
+
+goToSleep = (ms) => {
+    return new Promise(res => setTimeout(res, ms));
 }
 
 getMovrStaked = async(address) => {
